@@ -19,9 +19,5 @@ class UserUseCase(ABC):
         """Create User"""
 
     @abstractmethod
-    async def is_admin(self, *, user_id: int) -> bool:
-        """Is admin"""
-
-    @abstractmethod
     async def login(self, *, email: str, password: str) -> LoginResponseDTO:
         """Login"""

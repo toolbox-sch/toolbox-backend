@@ -8,7 +8,6 @@ from app.user.application.exception import (
 from app.user.domain.command import CreateUserCommand
 from app.user.domain.entity.user import User, UserRead
 from app.user.domain.usecase.user import UserUseCase
-from app.user.domain.vo.location import Location
 from core.db import Transactional
 from core.helpers.token import TokenHelper
 
@@ -41,19 +40,8 @@ class UserService(UserUseCase):
             email=command.email,
             password=command.password1,
             nickname=command.nickname,
-            location=Location(lat=command.lat, lng=command.lng),
         )
         await self.repository.save(user=user)
-
-    async def is_admin(self, *, user_id: int) -> bool:
-        user = await self.repository.get_user_by_id(user_id=user_id)
-        if not user:
-            return False
-
-        if user.is_admin is False:
-            return False
-
-        return True
 
     async def login(self, *, email: str, password: str) -> LoginResponseDTO:
         user = await self.repository.get_user_by_email_and_password(

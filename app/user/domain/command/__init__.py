@@ -6,5 +6,3 @@ class CreateUserCommand(BaseModel):
     password1: str
     password2: str
     nickname: str
-    lat: float
-    lng: float
