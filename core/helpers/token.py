@@ -55,3 +55,4 @@ class TokenHelper:
             )
         except jwt.exceptions.DecodeError:
             raise DecodeTokenException
+
