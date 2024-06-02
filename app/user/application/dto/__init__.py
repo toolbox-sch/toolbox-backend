@@ -1,10 +1,12 @@
 from pydantic import BaseModel, Field
+from datetime import datetime
 
 
-class GetUserListResponseDTO(BaseModel):
+class GetUserResponseDTO(BaseModel):
     id: int = Field(..., description="ID")
     email: str = Field(..., description="Email")
     nickname: str = Field(..., description="Nickname")
+    created_at: datetime = Field(..., description="Created at")
 
 
 class CreateUserRequestDTO(BaseModel):
@@ -20,5 +22,25 @@ class CreateUserResponseDTO(BaseModel):
 
 
 class LoginResponseDTO(BaseModel):
-    token: str = Field(..., description="Token")
+    access_token: str = Field(..., description="Token")
     refresh_token: str = Field(..., description="Refresh token")
+
+
+# Field default -> None == Optional / Optional Modify DTO
+class ChangeUserNicknameRequestDTO(BaseModel):
+    email: str = Field(None, description="Email")
+    nickname: str = Field(None, description="Nickname")
+
+
+class ChangePasswordRequestDTO(BaseModel):
+    password1: str = Field(..., description="Password1")
+    password2: str = Field(..., description="Password2")
+
+
+class GetFileResponseDTO(BaseModel):
+    file_id: int = Field(..., description="ID")
+    name: str = Field(..., description="Name")
+    extension: str = Field(..., description="Extension")
+    path: str = Field(..., description="Path")
+    size: int = Field(..., description="Size")
+    created_at: datetime = Field(..., description="Created at")
