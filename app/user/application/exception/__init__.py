@@ -17,3 +17,15 @@ class UserNotFoundException(CustomException):
     code = 404
     error_code = "USER__NOT_FOUND"
     message = "user not found"
+
+
+class NullFileException(CustomException):
+    code = 422
+    error_code = "FILE__NULL_FILE"
+    message = "file can't be null"
+
+
+class RejectFileCreationException(CustomException):
+    code = 500
+    error_code = "FILE__REJECT_FILE_CREATION"
+    message = "can't create file"

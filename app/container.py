@@ -5,6 +5,7 @@ from app.auth.application.service.jwt import JwtService
 from app.user.adapter.output.persistence.repository_adapter import UserRepositoryAdapter
 from app.user.adapter.output.persistence.sqlalchemy.user import UserSQLAlchemyRepo
 from app.user.adapter.output.persistence.sqlalchemy.user_file import UserFileSQLAlchemyRepo
+from app.user.application.service.file import FileService
 from app.user.application.service.user import UserService
 from app.user.application.service.user_file import UserFileService
 
@@ -18,5 +19,7 @@ class Container(DeclarativeContainer):
 
     user_file_repo = Singleton(UserFileSQLAlchemyRepo)
     user_file_service = Factory(UserFileService, repository=user_file_repo)
+
+    file_service = Factory(FileService, repository=user_file_repo)
 
     jwt_service = Factory(JwtService)

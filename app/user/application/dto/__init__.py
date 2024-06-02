@@ -44,3 +44,7 @@ class GetFileResponseDTO(BaseModel):
     path: str = Field(..., description="Path")
     size: int = Field(..., description="Size")
     created_at: datetime = Field(..., description="Created at")
+
+
+class DownloadFileRequestDTO(BaseModel):
+    filename: str = Field(None, description="File ID")
