@@ -1,5 +1,9 @@
+from datetime import datetime
+
 from app.user.domain.entity.user import User, UserRead
+from app.user.domain.entity.user_file import UserFile, UserFileRead
 from app.user.domain.repository.user import UserRepo
+from app.user.domain.repository.user_file import UserFileRepo
 
 
 class UserRepositoryAdapter:
@@ -42,3 +46,28 @@ class UserRepositoryAdapter:
 
     async def save(self, *, user: User) -> None:
         await self.user_repo.save(user=user)
+
+    async def destroy(self, *, user_id: int) -> None:
+        result = await self.user_repo.get_user_by_id(user_id=user_id)
+        result.deleted_at = datetime.now()
+        await self.user_repo.save(user=result)
+
+
+class UserFileRepositoryAdapter:
+    def __init__(self, *, user_file_repo: UserFileRepo):
+        self.user_file_repo = user_file_repo
+
+    async def get_file(self, *, file_id: int) -> UserFile:
+        return await self.user_file_repo.get_file(file_id=file_id)
+
+    async def get_files(self, *, limit: int = 12, prev: int | None = None) -> list[UserFileRead]:
+        files = await self.user_file_repo.get_files(limit=limit, prev=prev)
+        return [UserFileRead.model_validate(file) for file in files]
+
+    async def save(self, *, file: UserFile) -> None:
+        await self.user_file_repo.save(file=file)
+
+    async def destroy(self, *, file_id: int) -> None:
+        result = await self.user_file_repo.get_file(file_id=file_id)
+        result.deleted_at = datetime.now()
+        await self.user_file_repo.save(file=result)
