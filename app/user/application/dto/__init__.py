@@ -1,3 +1,4 @@
+from fastapi import UploadFile, File
 from pydantic import BaseModel, Field
 from datetime import datetime
 
@@ -40,11 +41,24 @@ class ChangePasswordRequestDTO(BaseModel):
 class GetFileResponseDTO(BaseModel):
     file_id: int = Field(..., description="ID")
     name: str = Field(..., description="Name")
-    extension: str = Field(..., description="Extension")
-    path: str = Field(..., description="Path")
-    size: int = Field(..., description="Size")
     created_at: datetime = Field(..., description="Created at")
 
 
 class DownloadFileRequestDTO(BaseModel):
     filename: str = Field(None, description="File ID")
+
+
+class PdfSplitterRequestDTO(BaseModel):
+    file: UploadFile = File(..., description="PDF File")
+    start: int = Field(..., description="Start Page")
+    end: int = Field(..., description="End Page")
+
+
+class PdfEncryptRequestDTO(BaseModel):
+    file: UploadFile = File(..., description="PDF File")
+    key: str = Field(None, description="Key")
+
+
+class ConvertImageRequestDTO(BaseModel):
+    file: UploadFile = File(..., description="Image File")
+    target: str = Field(..., description="Target Format")
