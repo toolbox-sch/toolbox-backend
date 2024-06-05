@@ -162,3 +162,4 @@ cython_debug/
 # Secret
 /core/.env
 /core/config.py
+/app/user/static/*
