@@ -32,5 +32,5 @@ async def test_create_refresh_token():
     sut = await jwt_service.create_refresh_token(token=token, refresh_token=token)
 
     # Then
-    assert sut.token
+    assert sut.accessToken
     assert sut.refresh_token
