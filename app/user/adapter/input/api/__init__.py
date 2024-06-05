@@ -6,8 +6,8 @@ from app.user.adapter.input.api.v1.file import file_router as file_v1_router
 
 router = APIRouter()
 router.include_router(user_v1_router, prefix="/api/v1/user", tags=["User"])
-router.include_router(user_file_v1_router, prefix="/api/v1/user/file", tags=["UserFile"])
-router.include_router(file_v1_router, prefix="/api/v1/file", tags=["File"])
+router.include_router(user_file_v1_router, prefix="/api/v1/user", tags=["UserFile"])
+router.include_router(file_v1_router, prefix="/api/v1", tags=["File"])
 
 
 __all__ = ["router"]

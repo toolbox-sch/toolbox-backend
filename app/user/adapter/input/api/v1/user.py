@@ -18,7 +18,7 @@ user_router = APIRouter()
 
 
 @user_router.get(
-    "",
+    "/me",
     response_model=GetUserResponseDTO,
     dependencies=[Depends(PermissionDependency([IsAuthenticated]))],
 )
