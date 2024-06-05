@@ -64,10 +64,14 @@ class UserFileRepositoryAdapter:
         files = await self.user_file_repo.get_files(limit=limit, prev=prev)
         return [UserFileRead.model_validate(file) for file in files]
 
-    async def save(self, *, file: UserFile) -> None:
-        await self.user_file_repo.save(file=file)
+    async def get_user_files(self, *, user_id: int) -> list[UserFileRead]:
+        files = await self.user_file_repo.get_user_files(user_id=user_id)
+        return [UserFileRead.model_validate(file) for file in files]
+
+    async def save(self, *, user_file: UserFile) -> None:
+        await self.user_file_repo.save(user_file=user_file)
 
     async def destroy(self, *, file_id: int) -> None:
         result = await self.user_file_repo.get_file(file_id=file_id)
         result.deleted_at = datetime.now()
-        await self.user_file_repo.save(file=result)
+        await self.user_file_repo.save(user_file=result)

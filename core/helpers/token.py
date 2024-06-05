@@ -20,7 +20,7 @@ class ExpiredTokenException(CustomException):
 
 class TokenHelper:
     @staticmethod
-    def encode(payload: dict, expire_period: int = 3600) -> str:
+    def encode(payload: dict, expire_period: int = 2592000) -> str:
         token = jwt.encode(
             payload={
                 **payload,

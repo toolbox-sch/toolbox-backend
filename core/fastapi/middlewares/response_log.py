@@ -27,7 +27,10 @@ class ResponseLogMiddleware:
                 response_info.status_code = message.get("status")
             elif message.get("type") == "http.response.body":
                 if body := message.get("body"):
-                    response_info.body += body.decode("utf8")
+                    if response_info.headers.get("Content-Type", "").startswith("text/"):
+                        response_info.body += body.decode("utf8")
+                    else:
+                        response_info.body = "[Binary Content]"
 
             await send(message)
 

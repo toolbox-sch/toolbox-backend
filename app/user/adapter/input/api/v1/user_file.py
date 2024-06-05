@@ -4,14 +4,15 @@ from fastapi import APIRouter, Depends, Query
 from app.container import Container
 from app.user.application.dto import GetFileResponseDTO
 from app.user.domain.usecase.user_file import UserFileUseCase
-from core.fastapi.dependencies import PermissionDependency, IsAdmin
+from core.fastapi.dependencies import PermissionDependency, IsAdmin, IsAuthenticated
 
 user_file_router = APIRouter()
 
 
 @user_file_router.get(
-    "/{file_id}",
+    "/file/{file_id}",
     response_model=GetFileResponseDTO,
+    dependencies=[Depends(PermissionDependency([IsAuthenticated]))],
 )
 @inject
 async def get_file(
@@ -22,7 +23,7 @@ async def get_file(
 
 
 @user_file_router.get(
-    "s",
+    "/files",
     response_model=list[GetFileResponseDTO],
     dependencies=[Depends(PermissionDependency([IsAdmin]))],
 )
@@ -36,7 +37,8 @@ async def get_files(
 
 
 @user_file_router.delete(
-    "/{file_id}",
+    "/file/{file_id}",
+    dependencies=[Depends(PermissionDependency([IsAuthenticated]))],
 )
 @inject
 async def delete_file(
@@ -45,3 +47,15 @@ async def delete_file(
 ):
     await usecase.destroy(file_id=file_id)
     return {}
+
+
+@user_file_router.get(
+    "/{user_id}/files",
+    dependencies=[Depends(PermissionDependency([IsAuthenticated]))],
+)
+@inject
+async def get_user_files(
+    user_id: int,
+    usecase: UserFileUseCase = Depends(Provide[Container.user_file_service])
+):
+    return await usecase.get_user_files(user_id=user_id)

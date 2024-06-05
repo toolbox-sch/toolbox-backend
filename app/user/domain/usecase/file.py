@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import List
 
 from fastapi import UploadFile
 from fastapi.responses import FileResponse
@@ -14,10 +15,17 @@ class FileUseCase(ABC):
         """Upload file"""
 
     @abstractmethod
+    async def upload_files(
+        self,
+        *,
+        files: List[UploadFile]
+    ):
+        """Upload files"""
+
+    @abstractmethod
     async def download_file(
         self,
         *,
-        file_id: int = None,
-        filename: str = None
+        filename: str
     ) -> FileResponse:
         """Download file"""

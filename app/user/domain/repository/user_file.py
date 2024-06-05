@@ -21,3 +21,18 @@ class UserFileRepo(ABC):
     ) -> list[UserFile]:
         """ Get files list """
 
+    @abstractmethod
+    async def get_user_files(
+            self,
+            *,
+            user_id: int
+    ) -> list[UserFile]:
+        """ Get user files """
+
+    @abstractmethod
+    async def save(
+            self,
+            *,
+            user_file: UserFile
+    ) -> None:
+        """ Save file """

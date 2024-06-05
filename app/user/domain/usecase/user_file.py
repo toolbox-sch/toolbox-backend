@@ -13,5 +13,9 @@ class UserFileUseCase(ABC):
         """ Get files list """
 
     @abstractmethod
+    async def get_user_files(self, *, user_id: int) -> list[UserFileRead]:
+        """ Get user files """
+
+    @abstractmethod
     async def destroy(self, *, file_id: int) -> None:
         """ Delete file """

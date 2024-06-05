@@ -11,20 +11,27 @@ class UserFileService(UserFileUseCase):
         self.repository = repository
 
     async def get_file(
-            self,
-            *,
-            file_id: int
+        self,
+        *,
+        file_id: int
     ) -> UserFileRead:
         file = await self.repository.get_file(file_id=file_id)
         return UserFileRead.model_validate(file)
 
     async def get_files(
-            self,
-            *,
-            limit: int = 12,
-            prev: int | None = None
+        self,
+        *,
+        limit: int = 12,
+        prev: int | None = None
     ) -> list[UserFileRead]:
         return await self.repository.get_files(limit=limit, prev=prev)
+
+    async def get_user_files(
+        self,
+        *,
+        user_id: int
+    ) -> list[UserFileRead]:
+        return await self.repository.get_user_files(user_id=user_id)
 
     @Transactional()
     async def destroy(self, *, file_id: int) -> None:
