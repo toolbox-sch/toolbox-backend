@@ -163,3 +163,4 @@ cython_debug/
 /core/.env
 /core/config.py
 /app/user/static/*
+/config
