@@ -79,6 +79,7 @@ class ToolService(ToolUseCase):
         return encrypted_name
 
     @Transactional()
+    @save
     async def extract_pdf_text(self, *, file: UploadFile, user_id: int) -> str:
         pdf = PdfReader(file.file)
         text = ""
@@ -86,7 +87,11 @@ class ToolService(ToolUseCase):
         for page in pdf.pages:
             text += page.extract_text()
 
-        return text
+        filename = f"{str(uuid.uuid4())}.txt"
+        with open(os.path.join(FILE_PATH, filename), "wb") as f:
+            f.write(text.encode("utf-8"))
+
+        return filename
 
     @Transactional()
     async def pdf_to_png(self, *, file: UploadFile, user_id: int) -> List[str]:
