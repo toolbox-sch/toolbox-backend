@@ -113,8 +113,13 @@ class ToolService(ToolUseCase):
     @Transactional()
     @save
     async def convert_image(self, *, file: UploadFile, target: str, user_id: int):
+        target = "JPEG" if target == "JPG" else target
+
         target_format = target.upper()
-        if target_format not in ["PNG", "JPG", "ICO", "WEBP"]:
+        file_format = os.path.splitext(file.filename)[1].replace(".", "").upper()
+
+        if (target_format not in ["BMP", "DIB", "GIF", "JPEG", "PPM", "PNG"]
+                or file_format not in ["BMP", "DIB", "GIF", "JPEG", "PPM", "PNG"]):
             raise CustomException("Invalid file format")
 
         try:
@@ -128,6 +133,7 @@ class ToolService(ToolUseCase):
                 f.write(converted_image.getvalue())
 
         except Exception as e:
+            print(e)
             raise CustomException("Error converting image") from e
 
         return converted_name
