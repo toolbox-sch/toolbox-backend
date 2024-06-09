@@ -69,8 +69,8 @@ async def extract_pdf_text(
     file: UploadFile = File(...),
     usecase: ToolUseCase = Depends(Provide[Container.tool_service])
 ):
-    text = await usecase.extract_pdf_text(file=file, user_id=request.user.id)
-    return {"text": text}
+    filename = await usecase.extract_pdf_text(file=file, user_id=request.user.id)
+    return {"filename": filename}
 
 
 @tool_router.post(
