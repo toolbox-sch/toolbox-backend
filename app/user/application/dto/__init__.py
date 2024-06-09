@@ -43,22 +43,3 @@ class GetFileResponseDTO(BaseModel):
     name: str = Field(..., description="Name")
     created_at: datetime = Field(..., description="Created at")
 
-
-class DownloadFileRequestDTO(BaseModel):
-    filename: str = Field(None, description="File ID")
-
-
-class PdfSplitterRequestDTO(BaseModel):
-    file: UploadFile = File(..., description="PDF File")
-    start: int = Field(..., description="Start Page")
-    end: int = Field(..., description="End Page")
-
-
-class PdfEncryptRequestDTO(BaseModel):
-    file: UploadFile = File(..., description="PDF File")
-    key: str = Field(None, description="Key")
-
-
-class ConvertImageRequestDTO(BaseModel):
-    file: UploadFile = File(..., description="Image File")
-    target: str = Field(..., description="Target Format")
