@@ -1,10 +1,11 @@
 from typing import List
 
 from dependency_injector.wiring import inject, Provide
-from fastapi import APIRouter, Depends, UploadFile, File, Request
+from fastapi import APIRouter, Depends, UploadFile, File, Request, Body
+from pydantic import Field
 
 from app.container import Container
-from app.user.application.dto import PdfSplitterRequestDTO, PdfEncryptRequestDTO, ConvertImageRequestDTO
+from app.user.application.dto import ConvertImageRequestDTO, PdfSplitterRequestDTO
 from app.user.domain.usecase.tool import ToolUseCase
 from core.fastapi.dependencies import PermissionDependency, IsAuthenticated
 
@@ -26,36 +27,39 @@ async def merge_pdf(
 
 
 @tool_router.post(
-    "/pdf/split",
-    dependencies=[Depends(PermissionDependency([IsAuthenticated]))],
-)
-@inject
-async def split_pdf(
-    request: Request,
-    dto: PdfSplitterRequestDTO,
-    usecase: ToolUseCase = Depends(Provide[Container.tool_service])
-):
-    filename = await usecase.split_pdf(
-        file=dto.file,
-        start=dto.start,
-        end=dto.end,
-        user_id=request.user.id
-    )
-
-    return {"filename": filename}
-
-
-@tool_router.post(
     "/pdf/encrypt",
     dependencies=[Depends(PermissionDependency([IsAuthenticated]))],
 )
 @inject
 async def encrypt_pdf(
     request: Request,
-    dto: PdfEncryptRequestDTO,
+    key: str = Body(...),
+    file: UploadFile = File(...),
     usecase: ToolUseCase = Depends(Provide[Container.tool_service])
 ):
-    filename = await usecase.encrypt_pdf(file=dto.file, key=dto.key, user_id=request.user.id)
+    filename = await usecase.encrypt_pdf(file=file, key=key, user_id=request.user.id)
+    return {"filename": filename}
+
+
+@tool_router.post(
+    "/pdf/split",
+    dependencies=[Depends(PermissionDependency([IsAuthenticated]))],
+)
+@inject
+async def split_pdf(
+    request: Request,
+    start: int = Body(...),
+    end: int = Body(...),
+    file: UploadFile = File(...),
+    usecase: ToolUseCase = Depends(Provide[Container.tool_service])
+):
+    filename = await usecase.split_pdf(
+        file=file,
+        start=start,
+        end=end,
+        user_id=request.user.id
+    )
+
     return {"filename": filename}
 
 
@@ -94,8 +98,9 @@ async def pdf_to_png(
 @inject
 async def convert_image(
     request: Request,
-    dto: ConvertImageRequestDTO,
+    target: str = Body(...),
+    file: UploadFile = File(...),
     usecase: ToolUseCase = Depends(Provide[Container.tool_service])
 ):
-    filename = await usecase.convert_image(file=dto.file, target=dto.target, user_id=request.user.id)
+    filename = await usecase.convert_image(file=file, target=target, user_id=request.user.id)
     return {"filename": filename}

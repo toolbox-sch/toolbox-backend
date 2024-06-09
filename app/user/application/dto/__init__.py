@@ -49,14 +49,8 @@ class DownloadFileRequestDTO(BaseModel):
 
 
 class PdfSplitterRequestDTO(BaseModel):
-    file: UploadFile = File(..., description="PDF File")
     start: int = Field(..., description="Start Page")
     end: int = Field(..., description="End Page")
-
-
-class PdfEncryptRequestDTO(BaseModel):
-    file: UploadFile = File(..., description="PDF File")
-    key: str = Field(None, description="Key")
 
 
 class ConvertImageRequestDTO(BaseModel):
