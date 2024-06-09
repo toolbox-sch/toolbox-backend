@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, Query
 
 from app.container import Container
 from app.user.application.dto import GetFileResponseDTO
+from app.user.domain.entity.user_file import UserFileRead
 from app.user.domain.usecase.user_file import UserFileUseCase
 from core.fastapi.dependencies import PermissionDependency, IsAdmin, IsAuthenticated
 
@@ -51,6 +52,7 @@ async def delete_file(
 
 @user_file_router.get(
     "/{user_id}/files",
+    response_model=list[UserFileRead],
     dependencies=[Depends(PermissionDependency([IsAuthenticated]))],
 )
 @inject
