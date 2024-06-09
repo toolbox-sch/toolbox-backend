@@ -6,7 +6,7 @@ from typing import List
 from fastapi import UploadFile
 from PyPDF2 import PdfReader, PdfWriter
 from PIL import Image
-from pdf2image import convert_from_path, convert_from_bytes
+from pdf2image import convert_from_bytes
 
 from app.user.domain.entity.user_file import UserFile
 from core.db import Transactional
@@ -44,7 +44,7 @@ class ToolService(ToolUseCase):
             for file in files:
                 merger.append(PdfReader(file.file))
 
-            merged_name = f"/{str(uuid.uuid4())}.pdf"
+            merged_name = f"{str(uuid.uuid4())}.pdf"
             merger.write(FILE_PATH + merged_name)
 
         return merged_name
@@ -58,7 +58,7 @@ class ToolService(ToolUseCase):
         for page in range(start - 1, end):
             writer.add_page(pdf.pages[page])
 
-        split_name = f"/{str(uuid.uuid4())}.pdf"
+        split_name = f"{str(uuid.uuid4())}.pdf"
         writer.write(FILE_PATH + split_name)
 
         return split_name
@@ -72,14 +72,13 @@ class ToolService(ToolUseCase):
         for page in pdf.pages:
             writer.add_page(page)
 
-        encrypted_name = f"/{str(uuid.uuid4())}.pdf"
+        encrypted_name = f"{str(uuid.uuid4())}.pdf"
         writer.encrypt(key)
         writer.write(FILE_PATH + encrypted_name)
 
         return encrypted_name
 
     @Transactional()
-    @save
     async def extract_pdf_text(self, *, file: UploadFile, user_id: int) -> str:
         pdf = PdfReader(file.file)
         text = ""
@@ -93,7 +92,7 @@ class ToolService(ToolUseCase):
     async def pdf_to_png(self, *, file: UploadFile, user_id: int) -> List[str]:
         pdf = convert_from_bytes(file.file.read())
         image_names = []
-        converted_name = f"/{str(uuid.uuid4())}"
+        converted_name = f"{str(uuid.uuid4())}"
 
         for i, image in enumerate(pdf):
             image_name = f"{converted_name}_{i}.png"
@@ -114,7 +113,6 @@ class ToolService(ToolUseCase):
             raise CustomException("Invalid file format")
 
         try:
-            # image = Image.open(os.path.join(FILE_PATH, file.filename))
             image = Image.open(file.file)
             converted_image = BytesIO()
             image.convert("RGB").save(converted_image, format=target_format)
