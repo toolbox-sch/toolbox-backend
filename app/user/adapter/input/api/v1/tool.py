@@ -2,10 +2,8 @@ from typing import List
 
 from dependency_injector.wiring import inject, Provide
 from fastapi import APIRouter, Depends, UploadFile, File, Request, Body
-from pydantic import Field
 
 from app.container import Container
-from app.user.application.dto import ConvertImageRequestDTO, PdfSplitterRequestDTO
 from app.user.domain.usecase.tool import ToolUseCase
 from core.fastapi.dependencies import PermissionDependency, IsAuthenticated
 
