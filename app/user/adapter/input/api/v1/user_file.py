@@ -1,5 +1,5 @@
 from dependency_injector.wiring import inject, Provide
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, Request
 
 from app.container import Container
 from app.user.application.dto import GetFileResponseDTO
@@ -51,13 +51,13 @@ async def delete_file(
 
 
 @user_file_router.get(
-    "/{user_id}/files",
+    "/files/me",
     response_model=list[UserFileRead],
     dependencies=[Depends(PermissionDependency([IsAuthenticated]))],
 )
 @inject
 async def get_user_files(
-    user_id: int,
+    request: Request,
     usecase: UserFileUseCase = Depends(Provide[Container.user_file_service])
 ):
-    return await usecase.get_user_files(user_id=user_id)
+    return await usecase.get_user_files(user_id=request.user.id)
